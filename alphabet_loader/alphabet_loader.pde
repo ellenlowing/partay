@@ -1,3 +1,8 @@
+import oscP5.*;
+import netP5.*;
+
+OscP5 oscP5;
+
 ArrayList<ArrayList<PVector> > alphabetOutlines;
 ArrayList<PVector> strOutline;
 String alphabets = "abcde";
@@ -16,6 +21,7 @@ void setup() {
   rectMode(CENTER);
   prev = new PVector(0, 0, 0);
   horizontalMargin = width * 0.06;
+  oscP5 = new OscP5(this, 12000);
   
   // Parsing alphabet text files into outlines
   alphabetOutlines = new ArrayList<ArrayList<PVector> >();
@@ -45,10 +51,10 @@ void draw() {
   
   // #string
   //drawOutline(strOutline, new PVector(0, 0));
-  //drawCoil(strOutline, new PVector(width/4, -100));
-  //drawTwist(strOutline, new PVector(width/2, 0));
-  //float glitchmax = map(noise(millis()*0.001), 0, 1, 1, 15);
-  //drawGlitch(strOutline, new PVector(20, height/4), glitchmax);
+  drawCoil(strOutline, new PVector(width/4, -100));
+  drawTwist(strOutline, new PVector(width/2, 0));
+  float glitchmax = map(noise(millis()*0.001), 0, 1, 1, 15);
+  drawGlitch(strOutline, new PVector(20, height/4), glitchmax);
   
   // #letter by letter
   
@@ -61,13 +67,30 @@ void draw() {
     //float glitchmax = map(noise(millis()*0.001), 0, 1, 1, 15);
     //drawGlitch(outline, offset, glitchmax);
     // ##coil
-    //drawCoil(outline, offset);
+    drawCoil(outline, offset);
     // ##twist
     //drawTwist(outline, offset);
   }
   
-  
   println(frameRate);
+}
+
+void oscEvent(OscMessage theOscMessage) {
+  String val = theOscMessage.get(0).stringValue();
+  println("OSC message: ", val);
+  text = val;
+  strOutline = new ArrayList<PVector>();
+  for(int i = 0; i < text.length(); i++) { 
+    char character = text.charAt(i); 
+    int index = alphabets.indexOf(character); 
+    PVector letterOffset = new PVector(i * horizontalMargin, 0); 
+    ArrayList<PVector> outline = alphabetOutlines.get(index); 
+    for(PVector point : outline) {
+      PVector newpoint = new PVector(point.x, point.y);
+      newpoint.add(letterOffset);
+      strOutline.add(newpoint);
+    }
+  }
 }
 
 ArrayList<PVector> parseFile(String filename) {
