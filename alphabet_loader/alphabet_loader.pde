@@ -1,8 +1,9 @@
 ArrayList<ArrayList<PVector> > outlines;
+ArrayList<PVector> strOutline;
 String alphabets = "abcde";
 PVector prev;
 
-String text = "daaad";
+String text = "abcda";
 float horizontalMargin = 0;
 
 void setup() {
@@ -15,22 +16,41 @@ void setup() {
   stroke(255);
   rectMode(CENTER);
   prev = new PVector(0, 0, 0);
-  horizontalMargin = width * 0.07;
+  horizontalMargin = width * 0.06;
   
-  // Parsing text files into outlines
+  // Parsing alphabet text files into outlines
   outlines = new ArrayList<ArrayList<PVector> >();
   for(int i = 0; i < alphabets.length(); i++) {
     ArrayList<PVector> outline = parseFile(alphabets.charAt(i)+".txt");
     outlines.add(outline); 
   }
   
+  // Write all letters into one string, if string does not change
+  strOutline = new ArrayList<PVector>();
+  for(int i = 0; i < text.length(); i++) { 
+    char character = text.charAt(i); 
+    int index = alphabets.indexOf(character); 
+    PVector letterOffset = new PVector(i * horizontalMargin, 0); 
+    ArrayList<PVector> outline = outlines.get(index); 
+    for(PVector point : outline) {
+      PVector newpoint = new PVector(point.x, point.y);
+      newpoint.add(letterOffset);
+      strOutline.add(newpoint);
+    }
+  }
 }
 
 void draw() {
   background(0);
   stroke(255);
   
+  // #string
+  //drawOutline(strOutline, new PVector(0, 0));
+  //drawCoil(strOutline, new PVector(0, 0));
+  //drawTwist(strOutline, new PVector(width/2, 0));
+  
   // #letter by letter
+  /*
   for(int i = 0; i < text.length(); i++) {
     char character = text.charAt(i);
     int index = alphabets.indexOf(character);
@@ -52,6 +72,7 @@ void draw() {
     // ##twist
     //drawTwist(outline, offset);
   }
+  */
   
   println(frameRate);
 }
