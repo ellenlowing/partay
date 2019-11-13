@@ -46,8 +46,10 @@ void draw() {
   
   // #string
   //drawOutline(strOutline, new PVector(0, 0));
-  //drawCoil(strOutline, new PVector(0, 0));
+  //drawCoil(strOutline, new PVector(width/4, -100));
   //drawTwist(strOutline, new PVector(width/2, 0));
+  //float glitchmax = map(noise(millis()*0.001), 0, 1, 1, 15);
+  //drawGlitch(strOutline, new PVector(20, height/4), glitchmax);
   
   // #letter by letter
   /*
@@ -124,7 +126,7 @@ void drawTwist(ArrayList<PVector> outline, PVector offset) {
     float zOffset = rad * sin(deg + y*twist) ;
     float xOffset = rad * cos(deg + y*twist) - x + midpt.x - left;
     if (i != 0) {
-      if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 30) {
+      if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 10) {
         line(x+xOffset, y, zOffset, prev.x, prev.y, prev.z);
       } else {
         point(x+xOffset, y, zOffset);
