@@ -35,18 +35,19 @@ void setup() {
   strOutlines = new ArrayList<ArrayList<PVector> >();
   
   // Write all letters into one string, if string does not change
-  //strOutline = new ArrayList<PVector>();
-  //for(int i = 0; i < text.length(); i++) { 
-  //  char character = text.charAt(i); 
-  //  int index = alphabets.indexOf(character); 
-  //  PVector letterOffset = new PVector(i * horizontalMargin,0); 
-  //  ArrayList<PVector> outline = alphabetOutlines.get(index); 
-  //  for(PVector point : outline) {
-  //    PVector newpoint = new PVector(point.x, point.y);
-  //    newpoint.add(letterOffset);
-  //    strOutline.add(newpoint);
-  //  }
-  //}
+  ArrayList<PVector> strOutline = new ArrayList<PVector>();
+  for(int i = 0; i < text.length(); i++) { 
+    char character = text.charAt(i); 
+    int index = alphabets.indexOf(character); 
+    PVector letterOffset = new PVector(i * horizontalMargin,0); 
+    ArrayList<PVector> outline = alphabetOutlines.get(index); 
+    for(PVector point : outline) {
+      PVector newpoint = new PVector(point.x, point.y);
+      newpoint.add(letterOffset);
+      strOutline.add(newpoint);
+    }
+  }
+  strOutlines.add(strOutline);
 }
 
 void draw() {
@@ -54,6 +55,8 @@ void draw() {
   stroke(255);
   float life = 20000;
   float yoff = 0;
+  
+  translate(0, 0, -200);
   
   // #string
   //drawOutline(strOutline, new PVector(0, 0));
@@ -66,7 +69,7 @@ void draw() {
   
   for(int i = 0; i < strOutlines.size(); i++) {
     ArrayList<PVector> strOutline = strOutlines.get(i);
-    drawCoil(strOutline, new PVector(width/4, i*100-200));
+    drawLines(strOutline, new PVector(width/4, i*100));
   }
   
   // #letter by letter
@@ -84,8 +87,8 @@ void draw() {
     //drawTwist(outline, offset);
   //}
   
-  //flying -= 0.01;
-  //println(frameRate);
+  flying += 0.01;
+  println(frameRate);
 }
 
 void oscEvent(OscMessage theOscMessage) {
@@ -120,7 +123,7 @@ ArrayList<PVector> parseFile(String filename) {
       int y = int(pieces[1]);
       outline.add(new PVector(x, y));
       it++;
-      //println(it);
+      println(it);
     }
   } 
   catch (IOException e) {

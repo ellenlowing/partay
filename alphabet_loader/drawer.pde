@@ -115,15 +115,6 @@ void drawCoilRamp(ArrayList<PVector> outline, PVector offset) {
     float y = outline.get(i).y;
     xOffset = map(sin( x*0.15 + (millis()) * 0.005), -1.0, 1.0, -5, 5);
     yOffset = (map(sin( (y/20)*0.05 + (millis()) * 0.005), -1.0, 1.0, 1, 1.5));
-    //if (i != 0) {
-    //  if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 30) {
-    //    line(x+xOffset, y*yOffset, 0, prev.x, prev.y, prev.z);
-    //  } else {
-    //    point(x+xOffset, y*yOffset, 0);
-    //  }
-    //} else {
-    //  point(x+xOffset, y*yOffset, 0);
-    //}
     point(x+xOffset, y*yOffset, 0);
     prev = new PVector(x+xOffset, y*yOffset, 0);
     popMatrix();
@@ -131,6 +122,23 @@ void drawCoilRamp(ArrayList<PVector> outline, PVector offset) {
   popMatrix();
 }
 
+void drawLines(ArrayList<PVector> outline, PVector offset) {
+  float noiseXY = 0.005;
+  pushMatrix();
+  translate(offset.x, offset.y, 0);
+  int inc = 5;
+  for(int j = 0; j < outline.size(); j+=5) {
+    float x = outline.get(j).x;
+    float y = outline.get(j).y;
+    for(int i = 0; i < 200; i += inc) {
+      pushMatrix();
+      stroke(i);
+      line(x+ map(noise(x,i*noiseXY +flying), 0, 1, -10, 10), y + map(noise(y,i*noiseXY +flying), 0, 1, -15, 15), i, x+ map(noise(x,(i+inc)*noiseXY +flying), 0, 1, -10, 10), y + map(noise(y, (i+inc)*noiseXY+flying), 0, 1, -15, 15), i+inc);
+      popMatrix();
+    }
+  }
+  popMatrix();
+}
 
 float getLeftest(ArrayList<PVector> outline, PVector offset) {
   float left = width;
