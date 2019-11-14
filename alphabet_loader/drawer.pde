@@ -30,6 +30,27 @@ void drawGlitch(ArrayList<PVector> outline, PVector offset, float glitchmax) {
   popMatrix();
 }
 
+void drawTwistDrag(ArrayList<PVector> outline, PVector offset) {
+  pushMatrix();
+  translate(offset.x, offset.y, 0);
+  PVector midpt = getMidpoint(outline, offset);
+  float left = getLeftest(outline, offset);
+  for(int i = 0; i < outline.size(); i++) {
+    pushMatrix();
+    float x = outline.get(i).x;
+    float y = outline.get(i).y;
+    float rad = (x - midpt.x + left);
+    float deg = -((millis()) * 0.0001) * 4;
+    float twist = noise(x*0.01, y*0.01, millis()*0.001)*0.01; 
+    float zOffset = rad * sin(deg + y*twist) ;
+    float xOffset = rad * cos(deg + y*twist) - rad;
+    point(x+xOffset, y, zOffset);
+    prev = new PVector(x+xOffset, y, zOffset);
+    popMatrix();
+  }
+  popMatrix();
+}
+
 void drawTwist(ArrayList<PVector> outline, PVector offset) {
   pushMatrix();
   translate(offset.x, offset.y, 0);
@@ -45,7 +66,7 @@ void drawTwist(ArrayList<PVector> outline, PVector offset) {
     float zOffset = rad * sin(deg + y*twist) ;
     float xOffset = rad * cos(deg + y*twist) - x + midpt.x - left;
     if (i != 0) {
-      if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 2) {
+      if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 10) {
         line(x+xOffset, y, zOffset, prev.x, prev.y, prev.z);
       } else {
         point(x+xOffset, y, zOffset);

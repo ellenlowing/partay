@@ -8,11 +8,12 @@ ArrayList<PVector> strOutline;
 String alphabets = "abcde";
 PVector prev;
 
-String text = "abcda";
+String text = "abcde";
 float horizontalMargin = 0;
 
 void setup() {
-  size(1280, 720, P3D);
+  size(800, 600, P3D);
+  //size(1280, 720, P3D);
   //fullScreen(P3D, 2);
   pixelDensity(2);
   frameRate(50);
@@ -36,7 +37,7 @@ void setup() {
   for(int i = 0; i < text.length(); i++) { 
     char character = text.charAt(i); 
     int index = alphabets.indexOf(character); 
-    PVector letterOffset = new PVector(i * horizontalMargin, 0); 
+    PVector letterOffset = new PVector(i * horizontalMargin,0); 
     ArrayList<PVector> outline = alphabetOutlines.get(index); 
     for(PVector point : outline) {
       PVector newpoint = new PVector(point.x, point.y);
@@ -49,29 +50,33 @@ void setup() {
 void draw() {
   background(0);
   stroke(255);
+  float life = 20000;
+  float yoff = 0;
+  //float yoff = map(millis(), 0, life, height/2*2.5, -height/2*2.5);
   
   // #string
   //drawOutline(strOutline, new PVector(0, 0));
-  drawCoil(strOutline, new PVector(width/4, -100));
-  drawTwist(strOutline, new PVector(width/2, 0));
-  float glitchmax = map(noise(millis()*0.001), 0, 1, 1, 15);
-  drawGlitch(strOutline, new PVector(20, height/4), glitchmax);
+  //drawCoil(strOutline, new PVector(width/4, -100));
+  //drawTwist(strOutline, new PVector(width/2, 0));
+  drawTwistDrag(strOutline, new PVector(width/2, yoff));
+  //float glitchmax = map(noise(millis()*0.001), 0, 1, 1, 15);
+  //drawGlitch(strOutline, new PVector(20, height/4), glitchmax);
   
   // #letter by letter
   
-  for(int i = 0; i < text.length(); i++) {
-    char character = text.charAt(i);
-    int index = alphabets.indexOf(character);
-    ArrayList<PVector> outline = alphabetOutlines.get(index);
-    PVector offset = new PVector(i * horizontalMargin, 0);
+  //for(int i = 0; i < text.length(); i++) {
+  //  char character = text.charAt(i);
+  //  int index = alphabets.indexOf(character);
+  //  ArrayList<PVector> outline = alphabetOutlines.get(index);
+  //  PVector offset = new PVector(i * horizontalMargin, 0);
     // ##glitch
     //float glitchmax = map(noise(millis()*0.001), 0, 1, 1, 15);
     //drawGlitch(outline, offset, glitchmax);
     // ##coil
-    drawCoil(outline, offset);
+    //drawCoil(outline, offset);
     // ##twist
     //drawTwist(outline, offset);
-  }
+  //}
   
   println(frameRate);
 }
