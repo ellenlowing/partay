@@ -12,7 +12,8 @@ String text = "abcda";
 float horizontalMargin = 0;
 
 void setup() {
-  fullScreen(P3D, 2);
+  size(1280, 720, P3D);
+  //fullScreen(P3D, 2);
   pixelDensity(2);
   frameRate(50);
   background(0);

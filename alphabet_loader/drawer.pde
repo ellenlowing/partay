@@ -45,7 +45,7 @@ void drawTwist(ArrayList<PVector> outline, PVector offset) {
     float zOffset = rad * sin(deg + y*twist) ;
     float xOffset = rad * cos(deg + y*twist) - x + midpt.x - left;
     if (i != 0) {
-      if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 10) {
+      if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 2) {
         line(x+xOffset, y, zOffset, prev.x, prev.y, prev.z);
       } else {
         point(x+xOffset, y, zOffset);
@@ -53,6 +53,7 @@ void drawTwist(ArrayList<PVector> outline, PVector offset) {
     } else {
       point(x+xOffset, y, zOffset);
     }
+    prev = new PVector(x+xOffset, y, zOffset);
     popMatrix();
   }
   popMatrix();
