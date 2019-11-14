@@ -104,6 +104,34 @@ void drawCoil(ArrayList<PVector> outline, PVector offset) {
   popMatrix();
 }
 
+void drawCoilRamp(ArrayList<PVector> outline, PVector offset) {
+  float xOffset = 0;
+  float yOffset = 0;
+  pushMatrix();
+  translate(offset.x, offset.y, 0);
+  for(int i = 0; i < outline.size(); i++) {
+    pushMatrix();
+    float x = outline.get(i).x;
+    float y = outline.get(i).y;
+    xOffset = map(sin( x*0.15 + (millis()) * 0.005), -1.0, 1.0, -5, 5);
+    yOffset = (map(sin( (y/20)*0.05 + (millis()) * 0.005), -1.0, 1.0, 1, 1.5));
+    //if (i != 0) {
+    //  if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 30) {
+    //    line(x+xOffset, y*yOffset, 0, prev.x, prev.y, prev.z);
+    //  } else {
+    //    point(x+xOffset, y*yOffset, 0);
+    //  }
+    //} else {
+    //  point(x+xOffset, y*yOffset, 0);
+    //}
+    point(x+xOffset, y*yOffset, 0);
+    prev = new PVector(x+xOffset, y*yOffset, 0);
+    popMatrix();
+  }
+  popMatrix();
+}
+
+
 float getLeftest(ArrayList<PVector> outline, PVector offset) {
   float left = width;
   for(PVector p : outline) {

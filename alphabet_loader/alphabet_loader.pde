@@ -7,13 +7,13 @@ ArrayList<ArrayList<PVector> > alphabetOutlines;
 ArrayList<PVector> strOutline;
 String alphabets = "abcde";
 PVector prev;
-
-String text = "abcde";
+float flying = 0;
+String text = "abcdddade";
+int textSize = 100;
 float horizontalMargin = 0;
 
 void setup() {
-  size(800, 600, P3D);
-  //size(1280, 720, P3D);
+  size(1280, 720, P3D);
   //fullScreen(P3D, 2);
   pixelDensity(2);
   frameRate(50);
@@ -22,7 +22,7 @@ void setup() {
   stroke(255);
   rectMode(CENTER);
   prev = new PVector(0, 0, 0);
-  horizontalMargin = width * 0.06;
+  horizontalMargin = width * 0.05;
   oscP5 = new OscP5(this, 12000);
   
   // Parsing alphabet text files into outlines
@@ -52,15 +52,15 @@ void draw() {
   stroke(255);
   float life = 20000;
   float yoff = 0;
-  //float yoff = map(millis(), 0, life, height/2*2.5, -height/2*2.5);
   
   // #string
   //drawOutline(strOutline, new PVector(0, 0));
-  //drawCoil(strOutline, new PVector(width/4, -100));
-  //drawTwist(strOutline, new PVector(width/2, 0));
-  drawTwistDrag(strOutline, new PVector(width/2, yoff));
-  //float glitchmax = map(noise(millis()*0.001), 0, 1, 1, 15);
-  //drawGlitch(strOutline, new PVector(20, height/4), glitchmax);
+  drawCoil(strOutline, new PVector(width/4, -100));
+  //drawCoilRamp(strOutline, new PVector(width/4, 0));
+  drawTwist(strOutline, new PVector(width/2, 0));
+  //drawTwistDrag(strOutline, new PVector(width/2, yoff));
+  float glitchmax = map(noise(millis()*0.001), 0, 1, 1, 15);
+  drawGlitch(strOutline, new PVector(20, height/4), glitchmax);
   
   // #letter by letter
   
@@ -78,6 +78,7 @@ void draw() {
     //drawTwist(outline, offset);
   //}
   
+  //flying -= 0.01;
   println(frameRate);
 }
 
@@ -111,7 +112,7 @@ ArrayList<PVector> parseFile(String filename) {
       int y = int(pieces[1]);
       outline.add(new PVector(x, y));
       it++;
-      println(it);
+      //println(it);
     }
   } 
   catch (IOException e) {
