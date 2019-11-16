@@ -29,8 +29,8 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/', (req, res) => {
-  let msg = req.body.hour;
+app.post('/submit', (req, res) => {
+  let msg = req.body.textbox;
   var buf = osc.toBuffer({
     oscType: 'message',
     address: '/input',

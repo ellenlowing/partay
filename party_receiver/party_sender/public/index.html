@@ -2,44 +2,60 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Control your LED!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title></title>
     <style media="screen">
-      body {
-        font-family: Arial;
-        font-size: 16px;
-        text-align: center;
-      }
-      button {
-        font-size: 0.8em;
-        padding: 10px 15px;
-      }
-      .container {
-        font-size: 1em;
-        left: 50%;
+      html, body {
+        /* font-family: */
         margin: 0;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        -webkit-user-select:none;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
       }
-      #state {
-        background-color: #FFFF00;
-        padding-top: 5px;
-        padding-bottom: 5px;
+      #textbox:focus,
+      #submit:focus {
+        border: none;
+        background-color: transparent;
+        resize: none;
+        outline: none;
+      }
+      img {
+        width: 100vw;
+        position: absolute;
+        top:0;
+        left:0;
+      }
+      #textbox {
+        border: none;
+        background-color: rgba(255,255,255, 0);
+        position: absolute;
+        top:100vw;
+        left:10vw;
+        width:30vw;
+        height:45vw;
+        z-index:2;
+      }
+      #submit {
+        border: none;
+        background-color: rgba(255,255,255, 0);
+        position: absolute;
+        top:148vw;
+        left:41vw;
+        width:8vw;
+        height:22vw;
       }
     </style>
+
+    <script type="text/javascript" src="vendors/jquery.min.js"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="scheduler">
-        <h2>Schedule time to turn light on</h2>
-        <form class="" action="" method="POST">
-          <input type="text" name="hour" placeholder="Hour">
-          <input type="text" name="minute" placeholder="Minute">
-          <br>
-          <br>
-          <button type="submit" name="button" id="submit">Submit</button>
-        </form>
-      </div>
+    <img src="IMG_5555_send.PNG" alt="">
+    <textarea name="textbox" rows="3" cols="80" id="textbox"></textarea>
+    <div id="submit">
+
     </div>
+    <script type="text/javascript" src="script.js"></script>
   </body>
 </html>
