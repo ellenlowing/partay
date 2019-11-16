@@ -9,3 +9,7 @@ $('#submit').click( (e) => {
   });
   return false;
 })
+
+// $('#textbox').bind('input propertychange', (e) => {
+//   $('#textbox'.val().length >= 30)
+// });

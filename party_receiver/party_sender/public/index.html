@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title></title>
     <style media="screen">
+      @font-face {
+        font-family: ms;
+        src: url('MS Sans Serif.ttf') format('truetype');
+      }
       html, body {
-        /* font-family: */
+        font-family:"ms", sans-serif;
         margin: 0;
         width: 100vw;
         height: 100vh;
-        overflow: hidden;
+        overflow-x: hidden;
         -webkit-user-select:none;
         -webkit-tap-highlight-color: rgba(0,0,0,0);
       }
@@ -28,13 +32,15 @@
         left:0;
       }
       #textbox {
+        font-family:"ms", sans-serif;
+        font-size: 18px;
         border: none;
         background-color: rgba(255,255,255, 0);
         position: absolute;
-        top:100vw;
+        top:108vw;
         left:10vw;
         width:30vw;
-        height:45vw;
+        height:30vw;
         z-index:2;
       }
       #submit {
@@ -52,7 +58,7 @@
   </head>
   <body>
     <img src="IMG_5555_send.png" alt="">
-    <textarea name="textbox" rows="3" cols="80" id="textbox"></textarea>
+    <textarea maxlength="30" name="textbox" rows="3" cols="80" id="textbox"></textarea>
     <div id="submit">
 
     </div>

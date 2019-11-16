@@ -11,16 +11,18 @@ void drawOutline(ArrayList<PVector> outline, PVector offset) {
   popMatrix();
 }
 
-void drawGlitch(ArrayList<PVector> outline, PVector offset, float glitchmax) {
+void drawGlitch(ArrayList<PVector> outline, PVector offset, int life, float glitchmax) {
   pushMatrix();
   translate(offset.x, offset.y, 0);
   int intXOffset = 0;
   int intYOffset = 0;
+  color c = colors[int(map(noise((life+millis())*0.1), 0, 1, 0, colors.length))];
+  stroke(c);
   for(int i = 0; i < outline.size(); i++) {
     pushMatrix();
     float x = outline.get(i).x;
     float y = outline.get(i).y;
-    float maxoff = map(noise(millis()*0.01), 0., 1., 0, glitchmax);  
+    float maxoff = map(noise(x*0.0005, y*0.0005, (millis()-life)*0.01), 0., 1., 0, glitchmax);  
     float offrand = random(1);
     if(offrand < 0.1) intXOffset += random(-maxoff, maxoff);
     if(offrand > 0.9) intYOffset += random(-maxoff, maxoff);
@@ -30,7 +32,7 @@ void drawGlitch(ArrayList<PVector> outline, PVector offset, float glitchmax) {
   popMatrix();
 }
 
-void drawTwistDrag(ArrayList<PVector> outline, PVector offset) {
+void drawTwistDrag(ArrayList<PVector> outline, PVector offset, int life) {
   pushMatrix();
   translate(offset.x, offset.y, 0);
   PVector midpt = getMidpoint(outline, offset);
@@ -40,13 +42,15 @@ void drawTwistDrag(ArrayList<PVector> outline, PVector offset) {
     float x = outline.get(i).x;
     float y = outline.get(i).y;
     float rad = (x - midpt.x + left);
-    float deg = -((millis()) * 0.0001) * 4;
+    float deg = -((millis()-life) * 0.0001) * 4;
     float twist = noise(x*0.01, y*0.01, millis()*0.001)*0.01; 
     float zOffset = rad * sin(deg + y*twist) ;
     float xOffset = rad * cos(deg + y*twist) - rad;
     point(x+xOffset, y, zOffset);
     prev = new PVector(x+xOffset, y, zOffset);
     popMatrix();
+    
+    //println(deg);
   }
   popMatrix();
 }
@@ -80,17 +84,43 @@ void drawTwist(ArrayList<PVector> outline, PVector offset) {
   popMatrix();
 }
 
-void drawCoil(ArrayList<PVector> outline, PVector offset) {
+void drawCoil(ArrayList<PVector> outline, PVector offset, int life) {
   float xOffset = 0;
+  color c0 = colors[0];
+  color c1 = colors[0];
+  if(life % 6 == 0) {
+    c0 = colors[0];
+    c1 = colors[1];
+  } else if (life % 6 == 1) {
+    c0 = colors[1];
+    c1 = colors[2];
+  } else if (life % 6 == 2) {
+    c0 = colors[2];
+    c1 = colors[3];
+  } else if (life % 6 == 3) {
+    c0 = colors[1];
+    c1 = colors[3];
+  } else if (life % 6 == 4) {
+    c0 = colors[0];
+    c1 = colors[3];
+  } else if (life % 6 == 5) {
+    c0 = colors[0];
+    c1 = colors[2];
+  }
   pushMatrix();
   translate(offset.x, offset.y, 0);
   for(int i = 0; i < outline.size(); i++) {
     pushMatrix();
     float x = outline.get(i).x;
     float y = outline.get(i).y;
+    float pct = sin( x*0.15 + (millis()) * 0.005) * 0.5 + 0.5;
+    float r = red(c0) * pct + red(c1) * (1.0-pct);
+    float g = green(c0) * pct + green(c1) * (1.0-pct);
+    float b = blue(c0) * pct + blue(c1) * (1.0-pct);
+    stroke(r, g, b);
     xOffset = map(sin( x*0.15 + (millis()) * 0.005), -1.0, 1.0, -5, 5);
     if (i != 0) {
-      if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 30) {
+      if (dist(x+xOffset, y, 0, prev.x, prev.y, prev.z) < 10) {
         line(x+xOffset, y, 0, prev.x, prev.y, prev.z);
       } else {
         point(x+xOffset, y, 0);
@@ -101,39 +131,55 @@ void drawCoil(ArrayList<PVector> outline, PVector offset) {
     prev = new PVector(x+xOffset, y, 0);
     popMatrix();
   }
+    
   popMatrix();
 }
 
-void drawCoilRamp(ArrayList<PVector> outline, PVector offset) {
+void drawCoilWave(ArrayList<PVector> outline, PVector offset, int life) {
   float xOffset = 0;
-  float yOffset = 0;
+  float yOffset = height - 200 - ((millis() - life)%20000)*0.1;
   pushMatrix();
   translate(offset.x, offset.y, 0);
   for(int i = 0; i < outline.size(); i++) {
     pushMatrix();
     float x = outline.get(i).x;
     float y = outline.get(i).y;
-    xOffset = map(sin( x*0.15 + (millis()) * 0.005), -1.0, 1.0, -5, 5);
-    yOffset = (map(sin( (y/20)*0.05 + (millis()) * 0.005), -1.0, 1.0, 1, 1.5));
-    point(x+xOffset, y*yOffset, 0);
-    prev = new PVector(x+xOffset, y*yOffset, 0);
+    float noiseWave = map(noise(x*0.0001, y*0.0001, incflying), 0, 1, 0.1, 12);
+    xOffset = map(sin( x*0.15 + (millis()) * 0.005), -1.0, 1.0, -7, 7);
+    xOffset += sin( (y/50.0) - millis() * 0.001)/0.25*noiseWave;
+    
+    if (i != 0) {
+      if (dist(x+xOffset, y+yOffset, 0, prev.x, prev.y, prev.z) < 10) {
+        line(x+xOffset, y+yOffset, 0, prev.x, prev.y, prev.z);
+      } else {
+        point(x+xOffset, y+yOffset, 0);
+      }
+    } else {
+      point(x+xOffset, y+yOffset, 0);
+    }
+    prev = new PVector(x+xOffset, y+yOffset, 0);
     popMatrix();
   }
   popMatrix();
 }
 
 void drawLines(ArrayList<PVector> outline, PVector offset) {
-  float noiseXY = 0.005;
+  float noiseXY = 0.0025;
+  float noiseI = 0.001;
   pushMatrix();
   translate(offset.x, offset.y, 0);
   int inc = 5;
+  int maxxoffset = 10;
+  int maxyoffset = 15;
+  int zspeed = 100;
+  int zoff = -1500;
   for(int j = 0; j < outline.size(); j+=5) {
     float x = outline.get(j).x;
     float y = outline.get(j).y;
     for(int i = 0; i < 200; i += inc) {
       pushMatrix();
       stroke(i);
-      line(x+ map(noise(x,i*noiseXY +flying), 0, 1, -10, 10), y + map(noise(y,i*noiseXY +flying), 0, 1, -15, 15), i, x+ map(noise(x,(i+inc)*noiseXY +flying), 0, 1, -10, 10), y + map(noise(y, (i+inc)*noiseXY+flying), 0, 1, -15, 15), i+inc);
+      line(x+ map(noise(x,i*noiseXY +incflying), 0, 1, -maxxoffset, maxxoffset), y + map(noise(y,i*noiseXY +incflying), 0, 1, -maxyoffset, maxyoffset), incflying*zspeed+i+zoff, x+ map(noise(x,(i+inc)*noiseXY +incflying), 0, 1, -maxxoffset, maxxoffset), y + map(noise(y, (i+inc)*noiseXY+incflying), 0, 1, -maxyoffset, maxyoffset), incflying*zspeed+i+inc+zoff);
       popMatrix();
     }
   }
